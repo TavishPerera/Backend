@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: generator-service
+  labels:
+    app: generator-service
+spec:
+  replicas: 2 # You can adjust this number based on your needs
+  selector:
+    matchLabels:
+      app: generator-service
+  template:
+    metadata:
+      labels:
+        app: generator-service
+    spec:
+      containers:
+        - name: generator-service
+          image: <your-docker-registry>/generator-service:latest
+          ports:
+            - containerPort: 5050
+          env: # Define any environment variables if needed
+            - name: NODE_ENV
+              value: "production"

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quotes-service
+spec:
+  replicas: 2 # Adjust the number of replicas as needed
+  selector:
+    matchLabels:
+      app: quotes-service
+  template:
+    metadata:
+      labels:
+        app: quotes-service
+    spec:
+      containers:
+      - name: quotes-service
+        image: yourusername/quotes-service:latest # Replace with your Docker image name
+        ports:
+        - containerPort: 5005
+        env:
+          - name: AWS_REGION
+            value: "us-east-1"
+          - name: AWS_ACCESS_KEY_ID
+            value: "AKIARZW3GTWUOYBTEWXZ" # This is insecure
+          - name: AWS_SECRET_ACCESS_KEY
+            value: "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" # This is insecure

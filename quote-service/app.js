@@ -1,0 +1,61 @@
+require('dotenv').config(); // Load environment variables from .env file
+const express = require('express');
+const AWS = require('aws-sdk');
+const cors = require('cors'); // Import cors package
+
+const app = express();
+const port = 5005;
+
+app.use(express.json());
+app.use(cors()); // Add cors middleware
+
+
+// Configure AWS DynamoDB
+AWS.config.update({
+  region: 'us-east-1',
+  accessKeyId: 'AKIARZW3GTWUOYBTEWXZ',
+  secretAccessKey: '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',
+});
+
+const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const tableName = 'Quotes';
+
+// API to create a quote
+app.post('/quotes', (req, res) => {
+  const { id, author, text } = req.body;
+  const createdAt = new Date().toISOString(); // Generate a timestamp in ISO format
+  const params = {
+    TableName: tableName,
+    
+    Item: { id, author, text, createdAt },
+  };
+
+  dynamoDb.put(params, (err) => {
+    if (err) {
+      console.error('Unable to add quote. Error JSON:', JSON.stringify(err, null, 2));
+      res.status(500).send('Error adding the quote');
+    } else {
+      res.status(201).send('Quote added');
+    }
+  });
+});
+
+// API to get all quotes
+app.get('/quotes', (req, res) => {
+  const params = {
+    TableName: tableName,
+  };
+
+  dynamoDb.scan(params, (err, data) => {
+    if (err) {
+      console.error('Unable to get quotes. Error JSON:', JSON.stringify(err, null, 2));
+      res.status(500).send('Error getting the quotes');
+    } else {
+      res.status(200).json(data.Items);
+    }
+  });
+});
+
+app.listen(port, () => {
+  console.log(`Quotes API listening at http://localhost:${port}`);
+});
