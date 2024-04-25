@@ -16,10 +16,5 @@ COPY . .
 # Expose the port the app runs on
 EXPOSE 5006
 
-# Use an entrypoint script to securely handle environment variables
-COPY entrypoint.sh /usr/src/app/entrypoint.sh
-RUN chmod +x /usr/src/app/entrypoint.sh
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
-
 # Command to run the app
 CMD [ "node", "server.js" ]

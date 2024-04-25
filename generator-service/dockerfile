@@ -1,23 +1,20 @@
-# Step 1: Specify the base image. Here, we use the latest LTS version of Node.js
+# Use the official Node.js LTS version as a parent image
 FROM node:lts
 
-# Step 2: Set the working directory inside the container
+# Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Step 3: Copy package.json and package-lock.json (or yarn.lock) for installing dependencies
+# Copy the package.json and package-lock.json (or yarn.lock) files
 COPY package*.json ./
 
-# Step 4: Install dependencies
+# Install any dependencies
 RUN npm install
 
-# If you're building your code for production
-# RUN npm ci --only=production
-
-# Step 5: Copy the rest of your application's code into the container
+# Copy the rest of the application's code into the container
 COPY . .
 
-# Step 6: Your app binds to port 5050, so you'll use the EXPOSE instruction to have it mapped by the docker daemon
+# Expose the port the app runs on
 EXPOSE 5050
 
-# Step 7: Define the command to run your app. Here, we use the "node" command
-CMD [ "node", "index.js" ]
+# Command to run the app
+CMD [ "node", "server.js" ]
